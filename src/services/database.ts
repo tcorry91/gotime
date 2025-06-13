@@ -1,16 +1,12 @@
-import * as SQLite from 'expo-sqlite';
+// @ts-ignore
+import { openDatabase } from 'expo-sqlite';
 
-type SQLCallback = (
-  transaction: SQLite.SQLTransaction,
-  resultSet: SQLite.SQLResultSet,
-) => void;
+const db = openDatabase('gotime.db');
 
-
-const db = SQLite.openDatabase('gotime.db');
 
 
 export const initDB = () => {
-  db.transaction(tx => {
+  db.transaction((tx: any) => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS workouts (
         id TEXT PRIMARY KEY NOT NULL,
@@ -23,7 +19,7 @@ export const initDB = () => {
 
 
 export const saveWorkout = (id: string, date: string, data: object) => {
-  db.transaction(tx => {
+  db.transaction((tx: any) => {
     tx.executeSql(
       `INSERT INTO workouts (id, date, data) VALUES (?, ?, ?);`,
       [id, date, JSON.stringify(data)]
@@ -33,11 +29,11 @@ export const saveWorkout = (id: string, date: string, data: object) => {
 
 
 export const getWorkouts = (callback: (data: any[]) => void) => {
-  db.transaction(tx => {
+  db.transaction((tx: any) => {
     tx.executeSql(
       `SELECT * FROM workouts ORDER BY date DESC;`,
       [],
-      (_: SQLite.SQLTransaction, result: SQLite.SQLResultSet) => {
+      (_: any, result: any) => {
         const parsed = Array.from(result.rows).map((row: any) => ({
           ...row,
           data: JSON.parse(row.data),
@@ -47,3 +43,4 @@ export const getWorkouts = (callback: (data: any[]) => void) => {
     );
   });
 };
+
