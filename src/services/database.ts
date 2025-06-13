@@ -1,5 +1,11 @@
 import * as SQLite from 'expo-sqlite';
 
+type SQLCallback = (
+  transaction: SQLite.SQLTransaction,
+  resultSet: SQLite.SQLResultSet,
+) => void;
+
+
 const db = SQLite.openDatabase('gotime.db');
 
 
@@ -31,8 +37,8 @@ export const getWorkouts = (callback: (data: any[]) => void) => {
     tx.executeSql(
       `SELECT * FROM workouts ORDER BY date DESC;`,
       [],
-      (_, result) => {
-        const parsed = result.rows._array.map(row => ({
+      (_: SQLite.SQLTransaction, result: SQLite.SQLResultSet) => {
+        const parsed = Array.from(result.rows).map((row: any) => ({
           ...row,
           data: JSON.parse(row.data),
         }));
