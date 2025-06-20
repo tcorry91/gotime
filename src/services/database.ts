@@ -1,46 +1,24 @@
-// @ts-ignore
-import { openDatabase } from 'expo-sqlite';
-
-const db = openDatabase('gotime.db');
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
+export type Workout = {
+  id: string;
+  date: string;
+  data: any; 
+};
 
-export const initDB = () => {
-  db.transaction((tx: any) => {
-    tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS workouts (
-        id TEXT PRIMARY KEY NOT NULL,
-        date TEXT NOT NULL,
-        data TEXT NOT NULL
-      );`
-    );
-  });
+export const saveWorkout = async (id: string, date: string, data: any): Promise<void> => {
+  const key = `workout_${id}`;
+  const value = JSON.stringify({ id, date, data });
+  await AsyncStorage.setItem(key, value);
 };
 
 
-export const saveWorkout = (id: string, date: string, data: object) => {
-  db.transaction((tx: any) => {
-    tx.executeSql(
-      `INSERT INTO workouts (id, date, data) VALUES (?, ?, ?);`,
-      [id, date, JSON.stringify(data)]
-    );
-  });
+export const getWorkouts = async (): Promise<Workout[]> => {
+  const keys = await AsyncStorage.getAllKeys();
+  const workoutKeys = keys.filter(k => k.startsWith('workout_'));
+  const items = await AsyncStorage.multiGet(workoutKeys);
+  return items
+    .map(([_, v]) => (v ? JSON.parse(v) : null))
+    .filter((w): w is Workout => w !== null);
 };
-
-
-export const getWorkouts = (callback: (data: any[]) => void) => {
-  db.transaction((tx: any) => {
-    tx.executeSql(
-      `SELECT * FROM workouts ORDER BY date DESC;`,
-      [],
-      (_: any, result: any) => {
-        const parsed = Array.from(result.rows).map((row: any) => ({
-          ...row,
-          data: JSON.parse(row.data),
-        }));
-        callback(parsed);
-      }
-    );
-  });
-};
-
