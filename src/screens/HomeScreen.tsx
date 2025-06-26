@@ -1,6 +1,7 @@
 import { View, Text } from "react-native";
 import { useWorkouts } from "@/hooks/useWorkouts";
 import { FlatList } from "react-native-gesture-handler";
+import WorkoutCard from "@/components/WorkoutCard";
 
 export default function HomeScreen() {
   const { workouts, loading } = useWorkouts();
@@ -9,9 +10,20 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
+     
+      <WorkoutCard
+        title="Today's Workout"
+        workoutName="Push Day"
+        exerciseCount={3}
+        onStart={() => { /* TODO: Add navigation or modal here */ }}
+      />
+  
+    
+      <Text style={{ fontSize: 20, fontWeight: "bold", marginVertical: 20 }}>
         Recent Workouts
       </Text>
+  
+   
       <FlatList
         data={workouts}
         keyExtractor={(item) => item.id}
@@ -26,4 +38,5 @@ export default function HomeScreen() {
       />
     </View>
   );
+  
 }
