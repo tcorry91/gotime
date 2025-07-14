@@ -1,7 +1,8 @@
-import { View, Text } from "react-native";
+import React from "react";
+import { View, Text, FlatList } from "react-native";
 import { useWorkouts } from "@/hooks/useWorkouts";
-import { FlatList } from "react-native-gesture-handler";
 import WorkoutCard from "@/components/WorkoutCard";
+import BlueButton from '@/components/BlueButton';
 
 export default function HomeScreen() {
   const { workouts, loading } = useWorkouts();
@@ -10,33 +11,36 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-     
       <WorkoutCard
         title="Today's Workout"
         workoutName="Push Day"
         exerciseCount={3}
-        onStart={() => { /* TODO: Add navigation or modal here */ }}
+        onStart={() => { /* TODO: Add navigation */ }}
       />
-  
-    
+   <BlueButton
+      title="Start Workout"
+      onPress={() => {}}
+      />
       <Text style={{ fontSize: 20, fontWeight: "bold", marginVertical: 20 }}>
         Recent Workouts
       </Text>
-  
-   
-      <FlatList
-        data={workouts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View
-            style={{ padding: 12, backgroundColor: "#eee", marginBottom: 10 }}
-          >
-            <Text>{item.date}</Text>
-            <Text>{item.exercises.length} exercises</Text>
-          </View>
-        )}
-      />
+
+      {workouts.length === 0 ? (
+        <Text style={{ color: "#888" }}>No recent workouts yet.</Text>
+      ) : (
+        <FlatList
+          data={workouts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <WorkoutCard
+            title={item.routineName ?? "Workout"}
+            workoutName={item.routineName ?? "Workout"}
+            exerciseCount={item.exercises?.length ?? 0}
+            date={item.date}
+          />
+          )}
+        />
+      )}
     </View>
   );
-  
 }

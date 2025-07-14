@@ -5,7 +5,8 @@ type WorkoutCardProps = {
   title: string;
   workoutName: string;
   exerciseCount: number;
-  onStart: () => void;
+  onStart?: () => void;
+  date?: string;
 };
 
 export default function WorkoutCard({ title, workoutName, exerciseCount, onStart }: WorkoutCardProps) {
