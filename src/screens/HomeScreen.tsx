@@ -3,6 +3,7 @@ import { View, Text, FlatList } from "react-native";
 import { useWorkouts } from "@/hooks/useWorkouts";
 import WorkoutCard from "@/components/WorkoutCard";
 import BlueButton from '@/components/BlueButton';
+import ProgressGraph from '@/components/ProgressGraph';
 
 export default function HomeScreen() {
   const { workouts, loading } = useWorkouts();
@@ -17,6 +18,7 @@ export default function HomeScreen() {
         exerciseCount={3}
         onStart={() => { /* TODO: Add navigation */ }}
       />
+      <ProgressGraph data={[2, 4, 3, 5, 6, 7, 8]} /> 
    <BlueButton
       title="Start Workout"
       onPress={() => {}}
