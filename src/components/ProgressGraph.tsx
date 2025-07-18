@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { VictoryLine, VictoryChart, VictoryTheme } from 'victory-native';
+import { VictoryChart, VictoryLine, VictoryTheme } from 'victory-native';
+
+
 
 type ProgressGraphProps = {
   data: number[];
@@ -17,7 +19,7 @@ export default function ProgressGraph({ data }: ProgressGraphProps) {
         domainPadding={{ x: 10 }}
       >
         <VictoryLine
-          data={data}
+          data={data.map((y, x) => ({ x, y }))}
           style={{ data: { stroke: "#457DF1", strokeWidth: 3 } }}
         />
       </VictoryChart>
